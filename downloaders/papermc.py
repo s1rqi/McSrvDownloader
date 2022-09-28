@@ -6,14 +6,13 @@ def papermc():
     versions = request.json()
     versions = versions["versions"]
 
-    print("\nAvailable Versions: \n"+", ".join(versions))
+    print(c.BLUE+"+ | Available Versions: \n"+c.END+", ".join(versions))
     print()
     
-    ver = input("? | Select Version: ")
-    print()
+    ver = input(c.GREEN+"? | Select Version: "+c.END)
 
     if not ver in versions:
-        print("! | Invalid Version") 
+        print(c.RED+"! | Invalid Version"+c.END) 
         exit()
     
     buildList = requests.get(f"https://api.papermc.io/v2/projects/paper/versions/{ver}/builds")
@@ -23,9 +22,9 @@ def papermc():
         builds.append(str(b["build"]))
     latest = builds[-1]
     
-    print(f"Available Builds: \n"+", ".join(builds))
+    print(f"{c.BLUE}+ | Available Builds: \n"+c.END+", ".join(builds))
     print()
-    build = input("? | Select Build (or type \"latest\" to select latest): ")
+    build = input(c.GREEN+"? | Select Build (or type \"latest\" to select latest): "+c.END)
     
     if build == "latest":
         build = latest
@@ -34,7 +33,7 @@ def papermc():
     fileSize = int(requests.head(url).headers["content-length"])
     fileName = f"paper-{ver}-{build}.jar"
 
-    print(f"Downloading {fileName}")
+    print(f"Downloading {url}")
 
     res = requests.get(url, stream=True)
     bar = tqdm(total=fileSize, unit="B", unit_scale=True)
@@ -47,7 +46,10 @@ def papermc():
             f.write(chunk)
             bar.update(len(chunk))
         bar.close()
-        print(f"Download successful in ./downloads/paper/{fileName}")
+        print(f"{c.BLUE}+ | Download successful in ./downloads/paper/{fileName}{c.END}")
 
 if __name__ == "__main__":
+    from color import *
     papermc()
+else:
+    from downloaders.color import *

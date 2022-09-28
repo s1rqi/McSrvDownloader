@@ -7,8 +7,7 @@ def vanilla():
     rManifest = requests.get(VERSION_MANIFEST_URL)
     manifest = rManifest.json()
 
-    version = input("? | Select Version: ")
-
+    version = input(c.GREEN+"? | Select Version: "+c.END)
     versionURL = None
 
     for v in manifest["versions"]:
@@ -17,7 +16,7 @@ def vanilla():
             break
 
     if versionURL == None:
-        print("! | Invalid Version")
+        print(c.RED+"! | Invalid Version"+c.END)
     else:
         rVersionManifest = requests.get(versionURL)
         versionManifest = rVersionManifest.json()
@@ -26,7 +25,7 @@ def vanilla():
         fileSize = int(requests.head(url).headers["content-length"])
         fileName = f"server-{version}.jar"
 
-        print(f"Downloading {fileName}")
+        print(f"Downloading {url}")
 
         res = requests.get(url, stream=True)
         bar = tqdm(total=fileSize, unit="B", unit_scale=True)
@@ -38,7 +37,10 @@ def vanilla():
                 f.write(chunk)
                 bar.update(len(chunk))
             bar.close()
-            print(f"Download successful in ./downloads/vanilla/{fileName}")
+            print(f"{c.BLUE}+ | Download successful in ./downloads/vanilla/{fileName}{c.END}")
 
 if __name__ == "__main__":
+    from color import *
     vanilla()
+else:
+    from downloaders.color import *
